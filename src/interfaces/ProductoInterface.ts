@@ -6,12 +6,13 @@ export interface CategoriaInterface {
 
 
 export interface ProductoInterface {
-    id: number,
+    id?: number,
     nombre: string,
     cod_producto: string,
     precio: number,
     stock: number,
-    imagen: string,
+    imagen?: string,
     descripcion?: string,
-    categoria: CategoriaInterface
+    categoria_id: number,
+    categoria?: CategoriaInterface
 }
