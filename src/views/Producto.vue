@@ -13,7 +13,7 @@ const producto_blank: ProductoInterface = {
 }
 
 const productos = ref<ProductoInterface[]>([]);
-const producto = ref<ProductoInterface>({...producto_blank});
+const producto = ref<ProductoInterface>({ ...producto_blank });
 
 onMounted(() => {
     ListarProductos()
@@ -28,12 +28,27 @@ async function ListarProductos() {
 
 // async function GuardarProducto(datos:ProductoInterface) {
 async function GuardarProducto() {
-    // console.log("Guardando...", datos);
-    console.log("Guardando...");
-    const res = await productoService.guardaRProducto(producto.value);
-    console.log(res.data);
+
+    if (producto.value.id) {
+        // modificando
+        console.log("Editando...");
+        const res = await productoService.modificarProducto(producto.value.id, producto.value);
+        console.log(res.data);
+    } else {
+        console.log("Guardando...");
+        const res = await productoService.guardaRProducto(producto.value);
+        console.log(res.data);
+
+    }
     producto.value = producto_blank;
     ListarProductos()
+    // console.log("Guardando...", datos);
+
+}
+
+async function funEditar(prod: ProductoInterface) {
+
+    producto.value = prod;
 }
 
 </script>
@@ -105,14 +120,13 @@ async function GuardarProducto() {
                     </div>
 
                     <!-- CATEGORIA -->
-                    <div>
+                    <!-- <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">
                             Categoría
                         </label>
                         <input type="text" v-model="producto.categoria" placeholder="Categoria"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-
-                    </div>
+                    </div> -->
 
                     <!-- BOTÓN -->
                     <button type="submit"
@@ -162,6 +176,10 @@ async function GuardarProducto() {
                                 {{ prod.categoria?.nombre }}
                             </td>
                             <td class="p-2">
+                                <button @click="funEditar(prod)"
+                                    class="text-yellow-500 hover:text-yellow-700 font-medium">
+                                    Editar
+                                </button>
                                 <button class="text-red-500 hover:text-red-700 font-medium">
                                     Eliminar
                                 </button>
